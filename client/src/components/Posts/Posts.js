@@ -1,24 +1,31 @@
 import React from "react";
 import Post from "./Post/Post.js";
 import useStyles from "./Styles.js";
+import { Grid, CircularProgress } from '@material-ui/core';
 import { useSelector } from "react-redux";
 
 //fetch the data from global data store using selectors
 
-const Posts = () => {
+const Posts = ({setCurrentId}) => {
     
-    const posts = useSelector((state) => state.posts); //initialse as a hooks. Parameter of the callback function has access to the whole global redux store/state
+    const posts = useSelector((state) => state.posts);
 
     const classes = useStyles();
 
     console.log(posts)
     
     return (
-        <>
-            <h2>Posts</h2>
-            <Post />
-            <Post />
-        </>
+        !posts.length ? <CircularProgress /> : (
+            <Grid className={classes.container} container alignItems="stretch" spacing={3}>
+                {posts.map((post) => (
+                    <Grid key={post._id} item xs={12} sm={6}>
+                        <Post post={post} setCurrentId={ setCurrentId } />
+                    </Grid>
+                ))
+                }
+
+            </Grid>
+        )
     );
 };
 
