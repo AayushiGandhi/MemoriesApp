@@ -4,7 +4,7 @@ import { Card, CardActions, CardContent, CardMedia, Button, Typography } from "@
 import moment from 'moment';
 import { useDispatch } from "react-redux";
 
-import { deletePost } from "../../../actions/posts.js";
+import { deletePost, likePost } from "../../../actions/posts.js";
 
 import ThumpUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -37,7 +37,7 @@ const Post = ({ post, setCurrentId }) => {
             </CardContent>
 
             <CardActions className={classes.cardActions}>
-            <Button color='primary' size="small" onClick={() => {}}>
+            <Button color='primary' size="small" onClick={() => {dispatch(likePost(post._id))}}>
                     <ThumpUpAltIcon fontSize="small" />
                     Like
                     {post.likeCount}
