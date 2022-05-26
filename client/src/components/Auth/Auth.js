@@ -10,6 +10,9 @@ import { gapi } from 'gapi-script';
 import { useDispatch } from 'react-redux';
 import { AUTH } from "../../constants/actionTypes.js";
 import {useNavigate} from 'react-router-dom';
+import { signup, signin } from '../../actions/auth.js';
+
+const initialState = { firstName: '', lastName: '', email: '', password: '', confirmPassword: '' }
 
 const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,6 +20,7 @@ const Auth = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [formData, setFormData] = useState(initialState);
 
   useEffect(() => {
     function start() {
@@ -29,14 +33,19 @@ const Auth = () => {
     gapi.load('client:auth2', start);
   });
 
-
-
-  const handleSubmit = () => {
-
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    if(isSignup){
+      dispatch(signup(formData, navigate))
+    }
+    else{
+      dispatch(signin(formData, navigate))
+    }
   }
 
-  const handleChange = () => {
-
+  const handleChange = (e) => {
+    setFormData({...formData, [e.target.name]: e.target.value }) 
   }
 
   const handleShowPassword = () => setShowPassword((prevShowPassword) => !prevShowPassword)
