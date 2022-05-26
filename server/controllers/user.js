@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import User from '../models/user.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -15,12 +14,12 @@ export const signin = async (req, res) => {
 
         if(!isPasswordCorrect) return res.status(404).json({message: "Invalid credentials"})
 
-        const token = jwt.sign({email: exitingUser.email, id: exitingUser._id}, process.env.jwt_Secret, { expiresIn: "1h"})
+        const token = jwt.sign({email: exitingUser.email, id: exitingUser._id}, 'test', { expiresIn: "1h"})
 
         res.status(200).json({result: exitingUser, token})
     }
     catch(error) {
-        res.status(500).json({message: "Somthing went wrong"})
+        res.status(500).json({message: "Somthing went wrong in sign in"})
     }
 }
 
@@ -34,15 +33,15 @@ export const signup = async (req, res) => {
 
         if(password !== confirmPassword) return res.status(400).json({message: "Password does not match"})
 
-        const hashedPassword = await bcrypt.hash(password)
+        const hashedPassword = await bcrypt.hash(password, 12);
 
         const result = await User.create({email, password: hashedPassword, name: `${firstName} ${lastName}`})
 
-        const token = jwt.sign({email: exitingUser.email, id: exitingUser._id}, process.env.jwt_Secret, {expiresIn:"1h"})
+        const token = jwt.sign( { email: result.email, id: result._id },  'test', { expiresIn: "1h" } );
 
-        res.status(200).json({result, token})
+        res.status(201).json({result, token})
     }
     catch(error){
-        res.status(500).json({message: "Something went wrong!"})
+        res.status(500).json({message: "Something went wrong in sign up!"})
     }
 }
