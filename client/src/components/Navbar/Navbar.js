@@ -5,6 +5,7 @@ import memories from '../../images/memories.png';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { LOGOUT } from '../../constants/actionTypes.js';
+import decode from 'jwt-decode'
 
 const Navbar = () => {
     const classes = useStyles();
@@ -15,6 +16,15 @@ const Navbar = () => {
 
     useEffect(() => {
         const token = user?.token;
+
+        if(token) {
+            const decodedToken = decode(token)
+
+            //check if token is expired if 1 hour has passed
+            if(decodedToken.exp * 1000 < new Date().getTime) {
+                logout();
+            }
+        }
         setUser(JSON.parse(localStorage.getItem("profile")))
     }, [location]);
 
