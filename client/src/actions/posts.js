@@ -1,5 +1,5 @@
 import * as api from "../api";
-import { CREATE, UPDATE, DELETE, FETCH_ALL, LIKE } from "../constants/actionTypes";
+import { CREATE, UPDATE, DELETE, FETCH_ALL, LIKE, FETCH_By_SEARCH } from "../constants/actionTypes";
 
 //actions creators : functions that return actions
  export const getPosts = () => async (dispatch) => {
@@ -15,6 +15,17 @@ import { CREATE, UPDATE, DELETE, FETCH_ALL, LIKE } from "../constants/actionType
     //const action = {type:'FETCH_ALL', payload:[]} //action is just an object that has type and payload. payload is data where we store all of our posts
 }
 
+export const getPostBySearch = (searchQuery) => async(dispatch) => {
+    try{
+        const { data: { data } } = await api.fetchPostsBySearch(searchQuery)
+        console.log(data)
+        dispatch({type: FETCH_By_SEARCH, payload: data});
+    }
+    catch(e) {
+        console.log(e)
+    }
+}
+
 export const createPost = (post) => async (dispatch) => {
     try{
         const { data } = await api.createPost(post);
@@ -24,6 +35,7 @@ export const createPost = (post) => async (dispatch) => {
         console.log(error.message)
     }
 }
+
 
 export const updatePost = (id, post) => async (dispatch) => {
     try{
